@@ -1,0 +1,56 @@
+info:
+  app:
+    name: "consumer"
+    description: "Projeto para manter os módulos do app"
+
+server:
+  port: 8080
+
+environment:
+  name: "localhost"
+
+spring:
+  application:
+    name: "consumer"
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: "postgres"
+    password: "postgres"
+  flyway:
+    enable: true
+    baselineOnMigrate: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+  mail:
+    enabled: false
+    from:
+      name:
+      address:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jaxb:
+    enabled: true
+
+image:
+  path: "./src/main/resources/static/images/"
+
+jwt:
+  secret: "_ChurchApp@2023_"
+  expiration_in_ms: 900000
+
+rabbitmq:
+  host: rabbitmq
