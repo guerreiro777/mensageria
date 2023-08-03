@@ -37,70 +37,6 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    @Transactional
-    public void save(final UserRequest userRequest, final Long user_id) {
-        validateInputs(userRequest);
-
-        UserModel userModel = new UserModel();
-
-        if (user_id != null) {
-            Optional<UserModel> actualUser = userRepository.findById(user_id);
-            if (actualUser.isEmpty()) {
-                throw new MensageriaConsumerNotFoundException(GeneralBusinessMessages.NOT_FOUND.getMessage("User"));
-            }
-            if (!actualUser.get().getUsername().equals(userRequest.getUsername())) {
-                checkUsernameExistsInDatabase(userRequest.getUsername());
-            }
-            if (!actualUser.get().getEmail().equals(userRequest.getEmail())) {
-                checkEmailExistsInDatabase(userRequest.getEmail());
-            }
-            userModel.setId(user_id);
-        } else {
-            checkUsernameExistsInDatabase(userRequest.getUsername());
-            checkEmailExistsInDatabase(userRequest.getEmail());
-        }
-
-        Set<String> strRoles = userRequest.getRole();
-        Set<SystemRolesModel> roles = new HashSet<>();
-
-        strRoles.forEach(role -> {
-            Optional<ERole> eRole = ERole.of(role);
-            if (eRole.isEmpty()) {
-                throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NOT_FOUND.getMessage("role: " + eRole));
-            }
-            Optional<SystemRolesModel> rolesModel = systemRoleRepository.findByName(eRole.get().name());
-            if (rolesModel.isEmpty()) {
-                throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NOT_FOUND.getMessage("role: " + eRole));
-            }
-            roles.add(rolesModel.get());
-        });
-
-        userModel.setUsername(userRequest.getUsername());
-        userModel.setPassword(encoder.encode(userRequest.getPassword()));
-        userModel.setEmail(userRequest.getEmail());
-        userModel.setRoles(roles);
-
-        userRepository.save(userModel);
-    }
-
-    private void validateInputs(final UserRequest userRequest) {
-        if (GeneralUtils.isNullOrEmpty(userRequest.getEmail())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("email"));
-        }
-        if (!GeneralUtils.isEmail(userRequest.getEmail())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.GENERAL_INVALID_MESSAGE.getMessage("email"));
-        }
-        if (GeneralUtils.isNullOrEmpty(userRequest.getUsername())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("username"));
-        }
-        if (GeneralUtils.isNullOrEmpty(userRequest.getPassword())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("password"));
-        }
-        if (userRequest.getRole() == null || userRequest.getRole().isEmpty()) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("roles"));
-        }
-    }
-
     public UserModel findById(final Long id) {
         Optional<UserModel> userModel = userRepository.findById(id);
         if (userModel.isEmpty()) {
@@ -119,17 +55,4 @@ public class UserService {
                 .collect(Collectors.toList());
         return userResponseList;
     }
-
-    private void checkUsernameExistsInDatabase(final String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.EXISTS_IN_DATABASE.getMessage("username"));
-        }
-    }
-
-    private void checkEmailExistsInDatabase(final String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.EXISTS_IN_DATABASE.getMessage("email"));
-        }
-    }
-
 }

@@ -25,46 +25,5 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @Operation(summary = "Create an client")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody ClienteRequest clientRequest) {
-        log.info("Creating client with data: {}", clientRequest.toString());
-        clientService.save(clientRequest, null);
-        return ResponseEntity.created(null).build();
-    }
-
-    @Operation(summary = "Update an client")
-    @PutMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody ClienteRequest clientRequest, @PathVariable Long id) {
-        log.info("Updating client with data: {}", clientRequest.toString());
-        clientService.save(clientRequest, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "Geting all clients")
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ClientResponse> findAll() {
-        log.info("Geting all clients");
-        return clientService.findAll();
-    }
-
-    @Operation(summary = "Searching an client with ID")
-    @GetMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ClientResponse findById(@PathVariable Long id) {
-        log.info("Searching client with ID: ", id);
-        return clientService.findById_Response(id);
-    }
-
-    @Operation(summary = "Filter a client through parameters")
-    @PostMapping("/filter")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ClientResponse> filter(@RequestBody ClienteRequest clientRequest) {
-        log.info("Filter a client through parameters: {}", clientRequest.toString());
-        return clientService.filter(clientRequest);
-    }
 
 }

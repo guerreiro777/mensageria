@@ -4,6 +4,7 @@ import com.br.mensageria.producer.component.MessageSender;
 import com.br.mensageria.producer.domain.request.OrderRequest;
 import com.br.mensageria.producer.domain.response.OrderResponse;
 import com.br.mensageria.producer.service.OrderService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,13 @@ public class OrderController {
     @Operation(summary = "Create an order")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity create(@RequestBody OrderRequest orderRequest) throws JsonProcessingException {
         log.info("Creating order with data: {}", orderRequest.toString());
         try {
             orderService.save(orderRequest, null);
-            this.messageSender.send("[Order purchase]" + orderRequest);
+            this.messageSender.send("[Order purchase]", orderRequest);
         } catch (Exception e) {
-            this.messageSender.send("[Order NOT purchase][" + e.getMessage() + "]" + orderRequest);
+            this.messageSender.send("[Order NOT purchase][" + e.getMessage() + "]", orderRequest);
         }
         return ResponseEntity.created(null).build();
     }
@@ -44,13 +45,13 @@ public class OrderController {
     @Operation(summary = "Updating an order")
     @PutMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody OrderRequest orderRequest, @PathVariable Long id) {
+    public ResponseEntity update(@RequestBody OrderRequest orderRequest, @PathVariable Long id) throws JsonProcessingException {
         log.info("Updating order with data: {}", orderRequest.toString());
         try {
             orderService.save(orderRequest, id);
-            this.messageSender.send("[Order changed purchase]" + orderRequest);
+            this.messageSender.send("[Order changed purchase]", orderRequest);
         } catch (Exception e) {
-            this.messageSender.send("[Error Order changed purchase][" + e.getMessage() + "]" + orderRequest);
+            this.messageSender.send("[Error Order changed purchase][" + e.getMessage() + "]", orderRequest);
         }
         return ResponseEntity.ok().build();
     }

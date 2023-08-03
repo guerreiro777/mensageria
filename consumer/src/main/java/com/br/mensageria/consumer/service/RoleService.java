@@ -25,43 +25,6 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    @Transactional
-    public void save(final RoleRequest roleRequest, final Long role_id) {
-        validateInputs(roleRequest);
-
-        RoleModel roleModel = new RoleModel();
-
-        if (role_id != null) {
-            if (roleRepository.findById(role_id).isEmpty()) {
-                throw new MensageriaConsumerNotFoundException(GeneralBusinessMessages.NOT_FOUND.getMessage("Role"));
-            }
-            roleModel.setId(role_id);
-        }
-
-        roleModel.setRole_name(roleRequest.getRole_name());
-        roleModel.setDescription(roleRequest.getDescription());
-        roleModel.setIs_ecclesiastical_function(roleRequest.getIs_ecclesiastical_function());
-        roleModel.setHierarchical_order(roleRequest.getHierarchical_order());
-
-        roleRepository.save(roleModel);
-    }
-
-    private void validateInputs(final RoleRequest roleRequest) {
-        if (GeneralUtils.isNullOrEmpty(roleRequest.getRole_name())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("role_name"));
-        }
-        else if (GeneralUtils.isNullOrEmpty(roleRequest.getDescription())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NULL_OR_EMPTY.getMessage("description"));
-        }
-        else if (!GeneralUtils.isBoolean(roleRequest.getIs_ecclesiastical_function())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.BOOLEAN.getMessage("is_ecclesiastical_function"));
-        }
-        else if (!GeneralUtils.isNumeric(roleRequest.getHierarchical_order())) {
-            throw new MensageriaConsumerArgumentException(GeneralBusinessMessages.NUMERIC.getMessage("hierarchical_order"));
-        }
-    }
-
-
     public RoleModel findById(final Long id) {
         Optional<RoleModel> roleModel = roleRepository.findById(id);
         if (roleModel.isEmpty()) {
@@ -70,23 +33,11 @@ public class RoleService {
         return roleModel.get();
     }
 
-    public RoleResponse findById_Response(final Long id) {
-        return RoleResponseMapper.INSTANCE.modelToResponse(this.findById(id));
-    }
-
     public List<RoleResponse> findAll() {
         List<RoleModel> roles = roleRepository.findAll();
         List<RoleResponse> roleResponseList = roles.stream().map(roleModel -> RoleResponseMapper.INSTANCE.modelToResponse(roleModel))
                 .collect(Collectors.toList());
         return roleResponseList;
-    }
-
-    public void deleteById(Long id) {
-        RoleModel roleModel = this.findById(id);
-        if (Objects.isNull(roleModel)) {
-            throw new MensageriaConsumerNotFoundException(GeneralBusinessMessages.NOT_FOUND.getMessage("Role"));
-        }
-        roleRepository.deleteById(roleModel.getId());
     }
 
     public List<RoleResponse> filter(RoleRequest roleRequest) {

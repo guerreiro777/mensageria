@@ -28,48 +28,6 @@ public class OrderController {
         this.receiver = receiver;
     }
 
-    @Operation(summary = "Create an order")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody OrderRequest orderRequest) {
-        log.info("Creating order with data: {}", orderRequest.toString());
-        orderService.save(orderRequest, null);
-        return ResponseEntity.created(null).build();
-    }
-
-    @Operation(summary = "Updating an order")
-    @PutMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody OrderRequest orderRequest, @PathVariable Long id) {
-        log.info("Updating order with data: {}", orderRequest.toString());
-        orderService.save(orderRequest, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "Geting all orders")
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> findAll() {
-        log.info("Geting all orders");
-        return orderService.findAll();
-    }
-
-    @Operation(summary = "Searching an order with ID")
-    @GetMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public OrderResponse findById(@PathVariable Long id) {
-        log.info("Searching order with ID: {}", id);
-        return orderService.findById(id);
-    }
-
-    @Operation(summary = "Searching order through parameters")
-    @GetMapping("/filter/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> filter(@PathVariable Long id) {
-        log.info("Searching order through parameters: {}", id);
-        return orderService.filter(id);
-    }
-
     @GetMapping("/message")
     public List<MessageDTO> getMessages() {
         return receiver.getMessages();

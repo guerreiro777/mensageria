@@ -35,8 +35,6 @@ curl --location --request POST 'http://localhost:8080/api/v1/auth/login' \
 }'
 ```
 
-# -- Sola Gratia --
-
 ### Client create
 
 ````
@@ -77,3 +75,5 @@ curl --location --request POST 'http://localhost:8080/api/v1/client' \
     }
 }'
 ````
+
+# -- Sola Gratia --

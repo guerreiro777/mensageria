@@ -25,42 +25,4 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Create an user")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody UserRequest userRequest) {
-        log.info("Creating user with data: {}", userRequest.toString());
-        userService.save(userRequest, null);
-        return ResponseEntity.created(null).build();
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Update an user")
-    @PutMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody UserRequest userRequest, @PathVariable Long id) {
-        log.info("Updating user with data: {}", userRequest.toString());
-        userService.save(userRequest, id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Geting all users")
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserResponse> findAll() {
-        log.info("Geting all users");
-        return userService.findAll();
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Searching an user with ID")
-    @GetMapping("/id/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponse findById(@PathVariable Long id) {
-        log.info("Searching user with ID: ", id);
-        return userService.findById_Response(id);
-    }
-
 }

@@ -4,6 +4,7 @@ import com.br.mensageria.producer.component.MessageSender;
 import com.br.mensageria.producer.domain.request.ClienteRequest;
 import com.br.mensageria.producer.domain.response.ClientResponse;
 import com.br.mensageria.producer.service.ClientService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,13 @@ public class ClientController {
     @Operation(summary = "Create an client")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity create(@RequestBody ClienteRequest clientRequest) {
+    public ResponseEntity create(@RequestBody ClienteRequest clientRequest) throws JsonProcessingException {
         log.info("Creating client with data: {}", clientRequest.toString());
         try {
             clientService.save(clientRequest, null);
-            this.messageSender.send("[Client added]" + clientRequest);
+            this.messageSender.send("[Client added]", clientRequest);
         } catch (Exception e) {
-            this.messageSender.send("[Client not added][" + e.getMessage() + "]" + clientRequest);
+            this.messageSender.send("[Client not added][" + e.getMessage() + "]", clientRequest);
         }
         return ResponseEntity.created(null).build();
     }
@@ -44,13 +45,13 @@ public class ClientController {
     @Operation(summary = "Update an client")
     @PutMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody ClienteRequest clientRequest, @PathVariable Long id) {
+    public ResponseEntity update(@RequestBody ClienteRequest clientRequest, @PathVariable Long id) throws JsonProcessingException {
         log.info("Updating client with data: {}", clientRequest.toString());
         try {
             clientService.save(clientRequest, id);
-            this.messageSender.send("[Client changed]" + clientRequest);
+            this.messageSender.send("[Client changed]", clientRequest);
         } catch (Exception e) {
-            this.messageSender.send("[Client not added][" + e.getMessage() + "]" + clientRequest);
+            this.messageSender.send("[Client not added][" + e.getMessage() + "]", clientRequest);
         }
         return ResponseEntity.ok().build();
     }
