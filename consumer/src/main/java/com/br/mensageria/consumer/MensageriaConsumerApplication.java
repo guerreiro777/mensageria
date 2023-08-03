@@ -46,9 +46,10 @@ public class MensageriaConsumerApplication {
 		return container;
 	}
 
+
 	@Bean
-	MessageListenerAdapter listenerAdapter(MessageReceiver object) {
-		return new MessageListenerAdapter(object, "object");
+	MessageListenerAdapter listenerAdapter(MessageReceiver receiver) {
+		return new MessageListenerAdapter(receiver, "receive");
 	}
 
 	public static void main(String[] args) {

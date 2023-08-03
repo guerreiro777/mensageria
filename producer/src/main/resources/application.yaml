@@ -16,9 +16,6 @@ spring:
     url: "jdbc:postgresql://localhost:5432/postgres"
     username: "postgres"
     password: "postgres"
-  flyway:
-    enable: true
-    baselineOnMigrate: false
   jpa:
     hibernate:
       ddl-auto: none
@@ -44,6 +41,11 @@ spring:
             enable: true
   jaxb:
     enabled: true
+  rabbitmq:
+    host: localhost
+    password: passw123
+    username: admin
+    port: 5672
 
 image:
   path: "./src/main/resources/static/images/"
@@ -51,6 +53,3 @@ image:
 jwt:
   secret: "_MensageriaApp@2023_"
   expiration_in_ms: 900000
-
-rabbitmq:
-  host: rabbitmq

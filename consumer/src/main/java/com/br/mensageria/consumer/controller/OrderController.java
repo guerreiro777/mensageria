@@ -1,5 +1,7 @@
 package com.br.mensageria.consumer.controller;
 
+import com.br.mensageria.consumer.component.MessageReceiver;
+import com.br.mensageria.consumer.component.Model.MessageDTO;
 import com.br.mensageria.consumer.domain.request.OrderRequest;
 import com.br.mensageria.consumer.domain.response.OrderResponse;
 import com.br.mensageria.consumer.service.OrderService;
@@ -8,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final MessageReceiver receiver;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, MessageReceiver receiver) {
         this.orderService = orderService;
+        this.receiver = receiver;
     }
 
     @Operation(summary = "Create an order")
@@ -65,5 +68,10 @@ public class OrderController {
     public List<OrderResponse> filter(@PathVariable Long id) {
         log.info("Searching order through parameters: {}", id);
         return orderService.filter(id);
+    }
+
+    @GetMapping("/message")
+    public List<MessageDTO> getMessages() {
+        return receiver.getMessages();
     }
 }

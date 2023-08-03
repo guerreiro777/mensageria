@@ -1,5 +1,6 @@
 package com.br.mensageria.producer.controller;
 
+import com.br.mensageria.producer.component.MessageSender;
 import com.br.mensageria.producer.domain.request.OrderRequest;
 import com.br.mensageria.producer.domain.response.OrderResponse;
 import com.br.mensageria.producer.service.OrderService;
@@ -19,9 +20,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final MessageSender messageSender;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, MessageSender messageSender) {
         this.orderService = orderService;
+        this.messageSender = messageSender;
     }
 
     @Operation(summary = "Create an order")
@@ -29,7 +32,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody OrderRequest orderRequest) {
         log.info("Creating order with data: {}", orderRequest.toString());
-        orderService.save(orderRequest, null);
+        try {
+            orderService.save(orderRequest, null);
+            this.messageSender.send("[Order purchase]" + orderRequest);
+        } catch (Exception e) {
+            this.messageSender.send("[Order NOT purchase][" + e.getMessage() + "]" + orderRequest);
+        }
         return ResponseEntity.created(null).build();
     }
 
@@ -38,7 +46,12 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@RequestBody OrderRequest orderRequest, @PathVariable Long id) {
         log.info("Updating order with data: {}", orderRequest.toString());
-        orderService.save(orderRequest, id);
+        try {
+            orderService.save(orderRequest, id);
+            this.messageSender.send("[Order changed purchase]" + orderRequest);
+        } catch (Exception e) {
+            this.messageSender.send("[Error Order changed purchase][" + e.getMessage() + "]" + orderRequest);
+        }
         return ResponseEntity.ok().build();
     }
 

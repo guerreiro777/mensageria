@@ -4,7 +4,7 @@ info:
     description: "Projeto para manter os módulos do app"
 
 server:
-  port: 8080
+  port: 8081
 
 environment:
   name: "localhost"
@@ -18,7 +18,7 @@ spring:
     password: "postgres"
   flyway:
     enable: true
-    baselineOnMigrate: false
+    baselineOnMigrate: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -44,6 +44,11 @@ spring:
             enable: true
   jaxb:
     enabled: true
+  rabbitmq:
+    host: 0.0.0.0
+    password: passw123
+    username: admin
+    port: 5672
 
 image:
   path: "./src/main/resources/static/images/"
@@ -51,6 +56,3 @@ image:
 jwt:
   secret: "_ChurchApp@2023_"
   expiration_in_ms: 900000
-
-rabbitmq:
-  host: rabbitmq

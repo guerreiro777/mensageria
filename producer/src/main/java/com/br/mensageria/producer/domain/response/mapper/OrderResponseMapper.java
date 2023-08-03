@@ -11,8 +11,5 @@ public interface OrderResponseMapper {
 
     OrderResponseMapper INSTANCE = Mappers.getMapper(OrderResponseMapper.class);
 
-    @Mapping(target = "date_took_office", dateFormat = "yyyy-MM-dd")
-    @Mapping(target = "client.birth_date", dateFormat = "yyyy-MM-dd")
-    @Mapping(target = "client.departure_date", dateFormat = "yyyy-MM-dd")
     OrderResponse modelToResponse(OrderModel model);
 }

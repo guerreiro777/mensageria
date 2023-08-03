@@ -1,5 +1,6 @@
 package com.br.mensageria.producer.controller;
 
+import com.br.mensageria.producer.component.MessageSender;
 import com.br.mensageria.producer.domain.request.ClienteRequest;
 import com.br.mensageria.producer.domain.response.ClientResponse;
 import com.br.mensageria.producer.service.ClientService;
@@ -19,9 +20,11 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+    private final MessageSender messageSender;
 
-    public ClientController(final ClientService clientService) {
+    public ClientController(final ClientService clientService, MessageSender messageSender) {
         this.clientService = clientService;
+        this.messageSender = messageSender;
     }
 
     @Operation(summary = "Create an client")
@@ -29,7 +32,12 @@ public class ClientController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody ClienteRequest clientRequest) {
         log.info("Creating client with data: {}", clientRequest.toString());
-        clientService.save(clientRequest, null);
+        try {
+            clientService.save(clientRequest, null);
+            this.messageSender.send("[Client added]" + clientRequest);
+        } catch (Exception e) {
+            this.messageSender.send("[Client not added][" + e.getMessage() + "]" + clientRequest);
+        }
         return ResponseEntity.created(null).build();
     }
 
@@ -38,7 +46,12 @@ public class ClientController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@RequestBody ClienteRequest clientRequest, @PathVariable Long id) {
         log.info("Updating client with data: {}", clientRequest.toString());
-        clientService.save(clientRequest, id);
+        try {
+            clientService.save(clientRequest, id);
+            this.messageSender.send("[Client changed]" + clientRequest);
+        } catch (Exception e) {
+            this.messageSender.send("[Client not added][" + e.getMessage() + "]" + clientRequest);
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -54,7 +67,7 @@ public class ClientController {
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ClientResponse findById(@PathVariable Long id) {
-        log.info("Searching client with ID: ", id);
+        log.info("Searching client with ID: {}", id);
         return clientService.findById_Response(id);
     }
 
@@ -65,5 +78,6 @@ public class ClientController {
         log.info("Filter a client through parameters: {}", clientRequest.toString());
         return clientService.filter(clientRequest);
     }
+
 
 }
