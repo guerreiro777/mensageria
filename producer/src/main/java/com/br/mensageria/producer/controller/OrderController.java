@@ -1,6 +1,7 @@
 package com.br.mensageria.producer.controller;
 
 import com.br.mensageria.producer.component.MessageSender;
+import com.br.mensageria.producer.domain.model.OrderModel;
 import com.br.mensageria.producer.domain.request.OrderRequest;
 import com.br.mensageria.producer.domain.response.OrderResponse;
 import com.br.mensageria.producer.service.OrderService;
@@ -34,8 +35,8 @@ public class OrderController {
     public ResponseEntity create(@RequestBody OrderRequest orderRequest) throws JsonProcessingException {
         log.info("Creating order with data: {}", orderRequest.toString());
         try {
-            orderService.save(orderRequest, null);
-            this.messageSender.send("[Order purchase]", orderRequest);
+            OrderModel model = orderService.save(orderRequest, null);
+            this.messageSender.send("[Order purchase]", model);
         } catch (Exception e) {
             this.messageSender.send("[Order NOT purchase][" + e.getMessage() + "]", orderRequest);
         }

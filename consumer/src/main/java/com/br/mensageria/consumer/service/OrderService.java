@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ClientService clientService;
     private final RoleService roleService;
-    private final MessageReceiver receiver;
+    @Autowired
+    MessageReceiver receiver;
 
-    public OrderService(OrderRepository orderRepository, final ClientService clientService, final RoleService roleService, MessageReceiver receiver) {
+    public OrderService(OrderRepository orderRepository, final ClientService clientService, final RoleService roleService) {
         this.orderRepository = orderRepository;
         this.clientService = clientService;
         this.roleService = roleService;
-        this.receiver = receiver;
     }
 
     public OrderResponse findById(final Long id) {

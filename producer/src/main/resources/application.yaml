@@ -16,6 +16,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/postgres"
     username: "postgres"
     password: "postgres"
+  flyway:
+    enable: true
+    baselineOnMigrate: false
   jpa:
     hibernate:
       ddl-auto: none

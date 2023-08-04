@@ -16,9 +16,6 @@ spring:
     url: "jdbc:postgresql://localhost:5432/postgres"
     username: "postgres"
     password: "postgres"
-  flyway:
-    enable: true
-    baselineOnMigrate: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -49,6 +46,14 @@ spring:
     password: passw123
     username: admin
     port: 5672
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 60s
+          max-attempts: 3
+          max-interval: 5m
+          multiplier: 2
 
 image:
   path: "./src/main/resources/static/images/"

@@ -4,6 +4,7 @@ import com.br.mensageria.consumer.component.Model.MessageDTO;
 import com.br.mensageria.consumer.service.ClientService;
 import com.br.mensageria.consumer.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ public class MessageReceiver {
     @Autowired
     ClientService clientService;
 
+    @RabbitHandler
     public void receive(String message) throws JsonProcessingException {
         System.out.println(String.format("Message received: %s", message));
         if (!message.isEmpty()) {

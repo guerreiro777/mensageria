@@ -26,15 +26,18 @@ public class OrderModel {
     @OneToOne
     private ClientModel client;
 
-    @OneToOne
-    private RoleModel role;
+    @Column(name = "product_value")
+    private BigDecimal product_value;
 
-    @Column(name = "receive_salary")
-    private Boolean receive_salary;
+    @Column(name = "volume")
+    private BigDecimal volume;
 
-    @Column(name = "salary_amount")
-    private BigDecimal salary_amount;
+    @Column(name = "weight")
+    private BigDecimal weight;
 
-    @Column(name = "date_took_office")
-    private Date date_took_office;
+    @Column(name = "amount")
+    private Long amount;
+
+    @Column(name = "date_buyed")
+    private Date date_buyed;
 }

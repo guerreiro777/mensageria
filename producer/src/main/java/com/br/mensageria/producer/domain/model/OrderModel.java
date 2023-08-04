@@ -35,9 +35,9 @@ public class OrderModel {
     @Column(name = "weight")
     private BigDecimal weight;
 
-    @Column(name = "date_buyed")
-    private String date_buyed;
-
     @Column(name = "amount")
     private Long amount;
+
+    @Column(name = "date_buyed")
+    private Date date_buyed;
 }

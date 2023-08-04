@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void save(final OrderRequest orderRequest, final Long order_id) {
+    public OrderModel save(final OrderRequest orderRequest, final Long order_id) throws ParseException {
         validateInputs(orderRequest);
 
         OrderModel orderModel = new OrderModel();
@@ -50,13 +50,15 @@ public class OrderService {
         ClientModel clientModel = clientService.findById(orderRequest.getClient_id());
 
         orderModel.setClient(clientModel);
-        orderModel.setAmount(orderRequest.getAmount());
+        orderModel.setProduct_value(orderRequest.getProduct_value());
         orderModel.setVolume(orderRequest.getVolume());
         orderModel.setWeight(orderRequest.getWeight());
-        orderModel.setDate_buyed(orderRequest.getDate_buyed());
-        orderModel.setProduct_value(orderRequest.getProduct_value());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-        orderRepository.save(orderModel);
+        orderModel.setDate_buyed(formatter.parse(orderRequest.getDate_buyed()));
+        orderModel.setAmount(orderRequest.getAmount());
+
+        return orderRepository.save(orderModel);
     }
 
     private void validateInputs(final OrderRequest orderRequest) {

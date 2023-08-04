@@ -1,5 +1,6 @@
 package com.br.mensageria.producer.component;
 
+import com.br.mensageria.producer.domain.model.OrderModel;
 import com.br.mensageria.producer.domain.request.ClienteRequest;
 import com.br.mensageria.producer.domain.request.OrderRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,4 +32,10 @@ public class MessageSender {
                 ow.writeValueAsString(obj));
     }
 
+    public void send(String message, OrderModel orderModel) throws JsonProcessingException {
+        System.out.println(message);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        rabbitTemplate.convertAndSend("messages-exchange", "message-key", message +
+                ow.writeValueAsString(orderModel));
+    }
 }

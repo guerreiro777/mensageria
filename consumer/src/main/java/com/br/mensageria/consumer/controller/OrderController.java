@@ -18,7 +18,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/v1/order", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrderController {
+public class    OrderController {
 
     private final OrderService orderService;
     private final MessageReceiver receiver;
